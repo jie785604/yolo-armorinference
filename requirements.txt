@@ -1,4 +1,14 @@
-ultralytics>=8.0.0
+# Python 3.10.8
+# 注意：若要使用 GPU，请先按本机 CUDA 版本安装对应的 PyTorch
+# （RTX 5070 属于 Blackwell 架构，需要 CUDA 12.8+ 与 torch>=2.7）
+ultralytics>=8.4.174
+torch>=2.7.0
+torchvision
 opencv-python>=4.8.0
-torch>=2.0.0
 numpy>=1.24.0
+onnx>=1.12.0
+onnxslim>=0.1.82
+
+# ONNX 推理后端：GPU 环境用 onnxruntime-gpu，才能和 GPU 上的 .pt 公平对比
+# 纯 CPU 环境请把下面一行换成 onnxruntime>=1.23.0
+onnxruntime-gpu>=1.23.0

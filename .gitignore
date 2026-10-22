@@ -1,18 +1,27 @@
+# ---------- Python ----------
 venv/
 env/
 __pycache__/
 *.py[cod]
-*.pt
 *.pth
-*.onnx
 *.weights
-weights/
-data/
-videos/
-*.mp4
-*.avi
-runs/
-outputs/
+
+# ---------- IDE / OS ----------
 .vscode/
 .idea/
 .DS_Store
+
+# ---------- 训练与导出产物 ----------
+runs/
+outputs/
+
+# ---------- 视频（体积大，不入库） ----------
+*.mp4
+*.avi
+*.mov
+
+# ---------- 权重：默认不入库，只保留对比实验用到的三个 ----------
+weights/*
+!weights/best.pt
+!weights/best.onnx
+!weights/best.torchscript
