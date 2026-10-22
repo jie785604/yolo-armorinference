@@ -117,8 +117,3 @@ python compare_inference.py
    - `.pt` 包含完整的训练信息，体积小，速度较快，适合直接用 Python 继续研究和微调。
    - `.onnx` 采用通用计算图标准，解耦了深度学习框架，跨平台兼容性极强，且便于加速。
    - `.torchscript` 是 PyTorch 的原生部署格式，兼顾了 PyTorch 的易用性和 C++ 等底层语言的高效性，但速度较慢。
-
-## 8. 许可证与致谢
-
-- 本项目基于 [Ultralytics YOLO](https://github.com/ultralytics/ultralytics) 实现，遵循 AGPL-3.0 许可证，详见 `LICENSE`。
-- 训练数据：装甲板姿态估计数据集（`rmul_pose_v3`）。
