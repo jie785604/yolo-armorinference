@@ -136,12 +136,14 @@ python compare_inference.py
 
 ```
 camera/mvs_camera.py        相机封装类 MvsCamera（取流 / 曝光 / 增益 / ROI / 像素格式）
+experiments/exp1m_motion_capture.py 多曝光运动拖影采集（清晰度/帧间差异统计）
 experiments/exp1_exposure.py        曝光时间对成像的影响
 experiments/exp2_gain.py            增益对图像质量的影响
 experiments/exp3_pixelformat.py     像素格式与取流性能对比
 experiments/exp4_memory_error.py    内存管理、取流超时、错误格式与异常退出
 experiments/exp5_yolo_live.py       YOLO 实时识别与录像
 experiments/exp6_param_compare.py   曝光/增益对识别结果的影响
+experiments/exp6b_motion_yolo.py    运动模糊对识别结果的影响
 data/exp/                   实验输出（图像、JSON、日志、演示视频）
 docs/实验记录.md            实验数据与分析报告
 ```
@@ -176,6 +178,8 @@ python experiments/exp4_memory_error.py
 python experiments/exp5_yolo_live.py --weights weights/best.pt --exposure 30000 --conf 0.4 --record
 
 # 实验6：相机参数对识别结果的影响（复用实验1/2 的图片）
+python experiments/exp1m_motion_capture.py --exposures 500,1000,3000,10000,30000 --segment 8
+python experiments/exp6b_motion_yolo.py --conf 0.25
 python experiments/exp6_param_compare.py --conf 0.25
 ```
 
