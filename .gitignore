@@ -20,6 +20,9 @@ outputs/
 *.avi
 *.mov
 
+# 演示视频例外（作业需提交）
+!docs/video/*.mp4
+
 # ---------- 权重：默认不入库，只保留对比实验用到的三个 ----------
 weights/*
 !weights/best.pt

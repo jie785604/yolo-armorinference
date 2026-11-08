@@ -146,6 +146,7 @@ experiments/exp5_yolo_live.py       YOLO 实时识别与录像
 experiments/exp6_param_compare.py   曝光/增益对识别结果的影响
 experiments/exp6b_motion_yolo.py    运动模糊对识别结果的影响
 data/exp/                           实验输出（图像、JSON、日志、演示视频）
+docs/video/                         演示视频（exp5 静止场景、exp5b 运动跟随）
 docs/实验记录.md                    实验数据与分析报告
 ```
 
@@ -189,6 +190,9 @@ python experiments/exp6_param_compare.py --conf 0.25
 
 # 实验6b：运动模糊对识别结果的影响（复用 exp1m 的图片）
 python experiments/exp6b_motion_yolo.py --conf 0.25
+
+# 运动跟随演示录制（手持装甲板左右移动）
+python experiments/exp5_yolo_live.py --weights weights/best.pt --exposure 10000 --conf 0.4 --record 35 --out data/exp/exp5b_motion_demo.mp4
 ```
 
 ### 8.5 权重格式
