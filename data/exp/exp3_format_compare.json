@@ -1,0 +1,35 @@
+[
+  {
+    "fmt": "BayerRG8",
+    "fps": 30.0,
+    "frames": 180,
+    "seconds": 6.0,
+    "cpu_percent": 35.3,
+    "decode_ms": 0.11,
+    "raw_bytes": 1555200,
+    "w": 1440,
+    "h": 1080
+  },
+  {
+    "fmt": "BGR8_Planar",
+    "fps": 29.99,
+    "frames": 180,
+    "seconds": 6.0,
+    "cpu_percent": 23.3,
+    "decode_ms": 4.23,
+    "raw_bytes": 4665600,
+    "w": 1440,
+    "h": 1080
+  },
+  {
+    "fmt": "RGB8_Planar",
+    "fps": 29.99,
+    "frames": 181,
+    "seconds": 6.03,
+    "cpu_percent": 59.2,
+    "decode_ms": 6.02,
+    "raw_bytes": 4665600,
+    "w": 1440,
+    "h": 1080
+  }
+]

@@ -1,0 +1,101 @@
+[
+  {
+    "mean": 5.39,
+    "p99": 29.0,
+    "max": 236,
+    "saturated_pct": 0.0,
+    "dark_mean": 0.89,
+    "dark_noise_std": 0.31,
+    "gain_db": 0.0,
+    "exposure_us": 3000.0,
+    "file": "exp2_gain0_0.png"
+  },
+  {
+    "mean": 5.39,
+    "p99": 29.0,
+    "max": 236,
+    "saturated_pct": 0.0,
+    "dark_mean": 0.89,
+    "dark_noise_std": 0.31,
+    "gain_db": 0.0,
+    "exposure_us": 3000.0,
+    "file": "exp2_gain0_1.png"
+  },
+  {
+    "mean": 5.39,
+    "p99": 29.0,
+    "max": 236,
+    "saturated_pct": 0.0,
+    "dark_mean": 0.89,
+    "dark_noise_std": 0.31,
+    "gain_db": 0.0,
+    "exposure_us": 3000.0,
+    "file": "exp2_gain0_2.png"
+  },
+  {
+    "mean": 10.41,
+    "p99": 58.0,
+    "max": 246,
+    "saturated_pct": 0.0,
+    "dark_mean": 1.81,
+    "dark_noise_std": 0.42,
+    "gain_db": 6.0,
+    "exposure_us": 3000.0,
+    "file": "exp2_gain6_0.png"
+  },
+  {
+    "mean": 10.4,
+    "p99": 58.0,
+    "max": 246,
+    "saturated_pct": 0.0,
+    "dark_mean": 1.81,
+    "dark_noise_std": 0.42,
+    "gain_db": 6.0,
+    "exposure_us": 3000.0,
+    "file": "exp2_gain6_1.png"
+  },
+  {
+    "mean": 10.41,
+    "p99": 58.0,
+    "max": 246,
+    "saturated_pct": 0.0,
+    "dark_mean": 1.81,
+    "dark_noise_std": 0.42,
+    "gain_db": 6.0,
+    "exposure_us": 3000.0,
+    "file": "exp2_gain6_2.png"
+  },
+  {
+    "mean": 20.26,
+    "p99": 111.0,
+    "max": 255,
+    "saturated_pct": 0.028,
+    "dark_mean": 4.31,
+    "dark_noise_std": 0.85,
+    "gain_db": 12.0,
+    "exposure_us": 3000.0,
+    "file": "exp2_gain12_0.png"
+  },
+  {
+    "mean": 20.25,
+    "p99": 111.0,
+    "max": 255,
+    "saturated_pct": 0.029,
+    "dark_mean": 4.31,
+    "dark_noise_std": 0.85,
+    "gain_db": 12.0,
+    "exposure_us": 3000.0,
+    "file": "exp2_gain12_1.png"
+  },
+  {
+    "mean": 20.26,
+    "p99": 111.0,
+    "max": 255,
+    "saturated_pct": 0.029,
+    "dark_mean": 4.31,
+    "dark_noise_std": 0.85,
+    "gain_db": 12.0,
+    "exposure_us": 3000.0,
+    "file": "exp2_gain12_2.png"
+  }
+]
