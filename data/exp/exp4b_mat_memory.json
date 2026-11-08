@@ -1,0 +1,47 @@
+{
+  "image_size_mb": 4.45,
+  "steps": [
+    {
+      "step": "start",
+      "rss_mb": 50.1
+    },
+    {
+      "step": "allocate 1 frame (1440x1080x3)",
+      "rss_mb": 50.1
+    },
+    {
+      "step": "500 shallow refs (list of views)",
+      "rss_mb": 50.1,
+      "n": 500
+    },
+    {
+      "step": "20 deep copies",
+      "rss_mb": 139.3,
+      "n": 20,
+      "expect_mb": 89.0
+    },
+    {
+      "step": "20 cvtColor results (gray)",
+      "rss_mb": 170.4,
+      "n": 20
+    },
+    {
+      "step": "after del copies/conv + gc",
+      "rss_mb": 51.6
+    },
+    {
+      "step": "hold 100 frames (simulated leak)",
+      "rss_mb": 64.9,
+      "n": 100
+    },
+    {
+      "step": "after releasing 100 frames",
+      "rss_mb": 51.7
+    },
+    {
+      "step": "300-iteration ring buffer of 5 frames",
+      "rss_mb": 78.3,
+      "delta_mb": 26.6
+    }
+  ]
+}
