@@ -20,8 +20,19 @@ outputs/
 *.avi
 *.mov
 
+# 演示视频例外（作业需提交）
+!docs/video/*.mp4
+
 # ---------- 权重：默认不入库，只保留对比实验用到的三个 ----------
 weights/*
 !weights/best.pt
 !weights/best.onnx
 !weights/best.torchscript
+
+# ---------- 实验原始图像（体积大，本地运行时生成） ----------
+data/exp/exp1/*.png
+data/exp/exp2/*.png
+
+# exp1m 运动实验原始帧（体积大）
+data/exp/exp1m/*.png
+data/exp/snapshot_now.png

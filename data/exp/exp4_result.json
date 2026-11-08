@@ -1,0 +1,42 @@
+{
+  "normal": {
+    "case": "normal",
+    "grabbed": 100,
+    "rss_before": 86.0,
+    "rss_after": 103.4,
+    "rss_delta": 17.4,
+    "fd_before": 17,
+    "fd_after": 17,
+    "crashed": false
+  },
+  "timeout": {
+    "case": "timeout",
+    "returned_none": true,
+    "wait_ms": 10.3,
+    "crashed": false
+  },
+  "bad_format": {
+    "case": "bad_format",
+    "alias_raised": true,
+    "alias_error": "不支持的格式别名 BGR8_Packed，可选 ['Mono8', 'BayerRG8', 'RGB8_Planar', 'BGR8_Planar', 'YUV422_YUYV']",
+    "sdk_ret": "0x80000101",
+    "sdk_rejected": true
+  },
+  "buffer_leak": {
+    "case": "buffer_leak",
+    "leaked": 1,
+    "extra_grab_ret": "0x80000007",
+    "extra_wait_ms": 800.3,
+    "recovered": true
+  },
+  "exception_exit": {
+    "case": "exception_exit",
+    "exception_caught": true,
+    "message": "simulated pipeline failure",
+    "reopen_ok": true,
+    "fd_after": 18
+  },
+  "final_rss_mb": 78.9,
+  "final_fd": 18,
+  "exit_ok": true
+}

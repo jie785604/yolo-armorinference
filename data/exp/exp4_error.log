@@ -1,0 +1,18 @@
+2026-11-08 15:03:28,470 INFO === experiment 4 start, pid=5800 ===
+2026-11-08 15:03:28,836 INFO camera opened: {'model': 'MV-CA016-10UC', 'serial': '00L28498186', 'version': 'V1.6.3 201222 551351', 'firmware': 'V1.6.3 201222,20091101'}
+2026-11-08 15:03:28,836 INFO CASE normal: start, grab 100 frames, free each buffer
+2026-11-08 15:03:32,204 INFO CASE normal result: {'case': 'normal', 'grabbed': 100, 'rss_before': 86.0, 'rss_after': 103.4, 'rss_delta': 17.4, 'fd_before': 17, 'fd_after': 17, 'crashed': False}
+2026-11-08 15:03:32,204 INFO CASE timeout: grab without StartGrabbing
+2026-11-08 15:03:32,214 INFO CASE timeout result: {'case': 'timeout', 'returned_none': True, 'wait_ms': 10.3, 'crashed': False}
+2026-11-08 15:03:32,214 INFO CASE bad_format: set unsupported PixelFormat
+2026-11-08 15:03:32,214 INFO   expected CameraError: 不支持的格式别名 BGR8_Packed，可选 ['Mono8', 'BayerRG8', 'RGB8_Planar', 'BGR8_Planar', 'YUV422_YUYV']
+2026-11-08 15:03:32,253 INFO   SDK SetEnumValue(0xdeadbeef) -> 0x80000101
+2026-11-08 15:03:32,256 INFO CASE bad_format recovered to BayerRG8
+2026-11-08 15:03:32,256 INFO CASE buffer_leak: never free image buffers, expect exhaustion
+2026-11-08 15:03:33,113 INFO   exhausted at iteration 1 ret=0x80000007
+2026-11-08 15:03:33,924 INFO   leaked buffers=1, extra grab ret=0x80000007 wait=800ms
+2026-11-08 15:03:33,990 INFO CASE buffer_leak result: {'case': 'buffer_leak', 'leaked': 1, 'extra_grab_ret': '0x80000007', 'extra_wait_ms': 800.3, 'recovered': True}
+2026-11-08 15:03:33,994 INFO CASE exception_exit: raise inside with-block, verify cleanup
+2026-11-08 15:03:34,406 INFO   caught: simulated pipeline failure
+2026-11-08 15:03:34,853 INFO CASE exception_exit result: {'case': 'exception_exit', 'exception_caught': True, 'message': 'simulated pipeline failure', 'reopen_ok': True, 'fd_after': 18}
+2026-11-08 15:03:34,853 INFO === experiment 4 end ===
