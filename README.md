@@ -221,3 +221,76 @@ python experiments/exp5_yolo_live.py --weights weights/best.pt --exposure 10000 
 - 端到端实时识别 26.66 fps（相机 30 fps），CPU 推理约 31 ms/帧。
 - 误检主要来自装甲板 LED 在黑色台面上的红色倒影，是反光场景的典型失效模式。
 - 运动状态下 3000 μs 的 R1 检出率从静止的 100 % 降到 62 %，但 10000 μs 以上亮度充足时拖影还不至于破坏识别。
+
+## 9. 相机标定与装甲板位姿解算
+
+在宿主机 Windows 11 上完成（相机 USB 直连，取流 69 fps）。代码分三部分：`calibration/` 标定、`pose/` 位姿与滤波、`experiments/exp7_pnp_kalman.py` 实时流程。
+
+### 9.1 环境
+
+| 项目 | 内容 |
+| :--- | :--- |
+| 操作系统 | Windows 11（i9-13900HX，32 线程） |
+| 相机 SDK | MVS 3.3.1（`C:\Program Files (x86)\MVS`） |
+| 图像/推理 | Python 3.10.8、OpenCV 5.0.0、ultralytics 8.4.177、torch 2.14.1+cpu |
+| 标定板 | 9 × 6 内角点，格边长 25 mm |
+
+Windows 下 `cv2.imread` / `cv2.imwrite` 不支持中文路径（项目路径含中文），`utils.py` 里用 `np.fromfile` + `cv2.imdecode` 绕开。
+
+### 9.2 目录与运行
+
+```
+calibration/make_board.py          生成可打印的棋盘格（300 dpi）
+calibration/capture_board.py       采集标定图（按角点位移自动去重）
+calibration/calibrate.py           标定，输出 calib_result.json
+pose/armor_pnp.py                  关键点 → solvePnP 位姿
+pose/kalman_tracker.py             匀速模型卡尔曼滤波与预测
+experiments/exp7_pnp_kalman.py     实时流程：识别 → 角点 → PnP → 滤波 → 显示/录制
+experiments/exp7_selftest.py       无相机时的数学链路自检
+```
+
+```bash
+# 采集（手持棋盘格变换姿态）
+python calibration/capture_board.py --board 9x6 --square-mm 25 --exposure 20000 --auto-count 25
+
+# 标定
+python calibration/calibrate.py --dir data/calib --board 9x6 --square-mm 25
+
+# 不需要相机的自检
+python experiments/exp7_selftest.py
+
+# 实时流程并录制
+python experiments/exp7_pnp_kalman.py --calib calibration/calib_result.json \
+    --weights weights/best.pt --record data/exp/exp7_demo.mp4
+```
+
+### 9.3 结果
+
+| 环节 | 结果 |
+| :--- | :--- |
+| 标定 | RMS 重投影 **0.7730 px**，`fx=2409.89 fy=2414.30 cx=746.30 cy=545.73` |
+| 畸变系数 | `[-0.0693, 0.2068, -0.0031, -0.0001]`（k3 固定为 0） |
+| PnP（65 cm 处静止） | `tvec = (8.3, 13.3, 652.2) mm`，重投影 3.13 px |
+| 卡尔曼降噪 | 逐帧跳变 26.19 → 9.18 mm（−65 %），加速度噪声 38.68 → 11.48 mm/帧²（−70 %） |
+| 滤波代价 | 平均滞后 15.8 mm |
+| 50 ms 预测误差 | 平均 31.1 mm，中位 27.7 mm |
+
+装甲板按两侧灯条外沿围成的矩形建模：**230 × 55 mm**，四角顺序为「左上、左下、右下、右上」。
+
+演示视频：[`docs/video/exp7_demo.mp4`](docs/video/exp7_demo.mp4)。数据与分析见 [`docs/实验记录.md`](docs/实验记录.md) 第 8~10 节。
+
+### 9.4 实现要点
+
+1. 角点顺序必须和三维点一一对应。模型 keypoints 的原始顺序是顺时针「左上→左下→右下→右上」，按逆时针写会让姿态镜像翻转。
+2. 不用「按 y 分行再按 x 排序」重排角点 —— 板子倾斜超过约 45° 会排错，直接用模型输出的原始顺序。
+3. `solvePnPGeneric` + `SOLVEPNP_IPPE` 对平面目标会给出两个候选解，取重投影误差小的那个。
+4. 卡尔曼的转移矩阵按实际帧间隔构造，每帧更新 `dt`，否则帧率波动时速度估计偏。
+5. 关键点在运动模糊下的检测误差会让重投影从 3 px 升到 7 px，这是位置噪声的主要来源。
+6. 标定和 PnP 必须用同一分辨率（1440 × 1080），换分辨率要重新标定。
+
+### 9.5 主要结论
+
+- 标定 RMS 0.77 px 满足 < 1 px 的常规要求；25 张图算 5 个畸变系数时 k3 过拟合（−2.76），固定为 0 后误差几乎不变。
+- 单目 PnP 测距在 0.5~0.8 m 内误差约 1 %，Z 精度主要受关键点抖动限制，不是解算算法的问题。
+- 卡尔曼把加速度噪声压低 70 %，代价是 13.6 mm 滞后；`process_var` 再调小会出现 0.5 s 以上的延迟，不能接受。
+- 预测窗口 50 ms 可用，窗口越长误差越大，实际用 50~100 ms 比较合适。

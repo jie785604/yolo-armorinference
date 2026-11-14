@@ -36,3 +36,6 @@ data/exp/exp2/*.png
 # exp1m 运动实验原始帧（体积大）
 data/exp/exp1m/*.png
 data/exp/snapshot_now.png
+
+# 标定原始图（体积大，本地生成）
+data/calib/*.png

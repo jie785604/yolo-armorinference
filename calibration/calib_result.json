@@ -1,0 +1,60 @@
+{
+  "image_width": 1440,
+  "image_height": 1080,
+  "board_cols": 9,
+  "board_rows": 6,
+  "square_mm": 25.0,
+  "rms_default5": 0.7728414871155898,
+  "rms_fix_k3": 0.773010684347573,
+  "camera_matrix": [
+    [
+      2409.894346257618,
+      0.0,
+      746.298754767922
+    ],
+    [
+      0.0,
+      2414.3009275081868,
+      545.729596896428
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "dist_coeffs": [
+    -0.0693156168448272,
+    0.2068169267501263,
+    -0.0031155342747297633,
+    -0.0001302900745288334,
+    0.0
+  ],
+  "used_images": [
+    "board_00.png",
+    "board_01.png",
+    "board_02.png",
+    "board_03.png",
+    "board_04.png",
+    "board_05.png",
+    "board_06.png",
+    "board_07.png",
+    "board_08.png",
+    "board_09.png",
+    "board_10.png",
+    "board_11.png",
+    "board_12.png",
+    "board_13.png",
+    "board_14.png",
+    "board_15.png",
+    "board_16.png",
+    "board_17.png",
+    "board_18.png",
+    "board_19.png",
+    "board_20.png",
+    "board_21.png",
+    "board_22.png",
+    "board_23.png",
+    "board_24.png"
+  ]
+}
