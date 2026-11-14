@@ -1,18 +1,52 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""海康 MV-CA016-10UC 工业相机封装（MVS SDK + OpenCV）"""
+"""海康 MV-CA016-10UC 工业相机封装（MVS SDK + OpenCV）
+
+支持 Windows 与 Linux 两套 MVS 安装路径，运行时自动探测。
+"""
 import os
 import sys
-import time
 from ctypes import cast, POINTER
 
 import numpy as np
 import cv2
 
-SDK_PY = '/opt/MVS/Samples/64/Python/MvImport'
-if SDK_PY not in sys.path:
-    sys.path.append(SDK_PY)
-os.environ.setdefault('MVCAM_COMMON_RUNENV', '/opt/MVS/lib')
+# (Python 样例目录, 动态库目录, 是否需要在库目录下拼 /64/)
+_SDK_CANDIDATES = [
+    (r'C:\Program Files (x86)\MVS\Development\Samples\Python\MvImport',
+     r'C:\Program Files (x86)\Common Files\MVS\Runtime\Win64_x64', False),
+    (r'C:\Program Files\MVS\Development\Samples\Python\MvImport',
+     r'C:\Program Files\Common Files\MVS\Runtime\Win64_x64', False),
+    (r'D:\MVS\Development\Samples\Python\MvImport',
+     r'D:\MVS\Runtime\Win64_x64', False),
+    ('/opt/MVS/Samples/64/Python/MvImport', '/opt/MVS/lib', True),
+    ('/opt/MVS/Samples/32/Python/MvImport', '/opt/MVS/lib/32', True),
+]
+
+
+def _setup_sdk():
+    """定位 MVS 的 Python 样例目录与动态库目录，返回 (py_dir, lib_dir)"""
+    for py_dir, lib_dir, needs_arch in _SDK_CANDIDATES:
+        if not os.path.isdir(py_dir):
+            continue
+        if py_dir not in sys.path:
+            sys.path.insert(0, py_dir)
+        if os.path.isdir(lib_dir):
+            os.environ['MVCAM_COMMON_RUNENV'] = lib_dir
+            if hasattr(os, 'add_dll_directory'):
+                try:
+                    os.add_dll_directory(lib_dir)
+                except OSError:
+                    pass
+            os.environ['PATH'] = lib_dir + os.pathsep + os.environ.get('PATH', '')
+        return py_dir, lib_dir
+    raise ImportError(
+        '找不到 MVS SDK。Windows 请安装 MVS 客户端，'
+        'Linux 请确认 /opt/MVS 存在。已尝试：%s' % [c[0] for c in _SDK_CANDIDATES]
+    )
+
+
+_SDK_PY_DIR, _SDK_LIB_DIR = _setup_sdk()
 
 from MvCameraControl_class import *  # noqa: E402,F403
 
@@ -48,13 +82,15 @@ class MvsCamera:
 
     # ---------------- 生命周期 ----------------
     def open(self):
-        MvCamera.MV_CC_Initialize()
+        # 4.x 以上 SDK 才有 Initialize/Finalize，3.x 直接枚举即可
+        if hasattr(MvCamera, 'MV_CC_Initialize'):
+            MvCamera.MV_CC_Initialize()
         dev_list = MV_CC_DEVICE_INFO_LIST()
         ret = MvCamera.MV_CC_EnumDevices(MV_USB_DEVICE, dev_list)
         if ret != 0:
             raise CameraError('枚举设备失败 ret=0x%08x' % ret)
         if dev_list.nDeviceNum == 0:
-            raise CameraError('未找到相机')
+            raise CameraError('未找到相机（检查 USB 是否插好、是否被 MVS 客户端占用）')
         st_dev = cast(dev_list.pDeviceInfo[self.index], POINTER(MV_CC_DEVICE_INFO)).contents
         self.cam = MvCamera()
         ret = self.cam.MV_CC_CreateHandle(st_dev)
@@ -72,21 +108,16 @@ class MvsCamera:
 
     def close(self):
         if self.cam is not None:
-            try:
-                self.cam.MV_CC_StopGrabbing()
-            except Exception:
-                pass
-            try:
-                self.cam.MV_CC_CloseDevice()
-            except Exception:
-                pass
-            try:
-                self.cam.MV_CC_DestroyHandle()
-            except Exception:
-                pass
+            for fn in (self.cam.MV_CC_StopGrabbing, self.cam.MV_CC_CloseDevice,
+                       self.cam.MV_CC_DestroyHandle):
+                try:
+                    fn()
+                except Exception:
+                    pass
             self.cam = None
         try:
-            MvCamera.MV_CC_Finalize()
+            if hasattr(MvCamera, 'MV_CC_Finalize'):
+                MvCamera.MV_CC_Finalize()
         except Exception:
             pass
 
@@ -187,8 +218,10 @@ class MvsCamera:
 
     def _decode(self, arr, w, h, pf):
         if pf == PIXEL_FORMATS['BayerRG8']:
+            # 实测该相机标称 BayerRG8，实际是 BGGR 排列
             return cv2.cvtColor(arr.reshape(h, w), cv2.COLOR_BayerBG2BGR)
         if pf == PIXEL_FORMATS['BGR8_Planar']:
+            # 实测平面顺序为 R,G,B，需反序
             planes = arr.reshape(3, h, w)[::-1].transpose(1, 2, 0)
             return np.ascontiguousarray(planes)
         if pf == PIXEL_FORMATS['RGB8_Planar']:
